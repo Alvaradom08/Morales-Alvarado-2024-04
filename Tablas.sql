@@ -1,6 +1,7 @@
 --Tablas
 
 CREATE TABLE Inventario(
+    idInventario CHAR(5) NOT NULL,
     idObjeto CHAR(5) NOT NULL,
     tipo VARCHAR(8) NOT NULL,
     nombre VARCHAR(50) NOT NULL,
@@ -17,15 +18,17 @@ CREATE TABLE InventarioTienda(
 CREATE TABLE InventarioUsuario (
     idObjeto CHAR(5) NOT NULL,
     fechadecompra DATE NULL, 
-    fechadeintercambio DATE NULL
+    fechadeintercambio DATE NULL,
+    idJugador CHAR(5) NOT NULL
 );
 
 CREATE TABLE Linea (
-    objeto VARCHAR(20) NOT NULL,
+    idLinea CHAR(5) NOT NULL,
     precioVenta NUMBER(5,2) NOT NULL
 );
 
 CREATE TABLE Compra (
+    idLinea CHAR(5) NOT NULL,
     numero CHAR(5) NOT NULL,
     fecha DATE NOT NULL,
     total NUMBER(5,2) NOT NULL
@@ -51,7 +54,7 @@ CREATE TABLE Intercambio (
 );
 
 CREATE TABLE Articulo (
-    idTienda CHAR(5) NOT NULL,
+    idInventario CHAR(5) NOT NULL,
     idLinea CHAR(5) NOT NULL,
     precioVenta NUMBER(5,2) NOT NULL
 );
