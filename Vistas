@@ -1,0 +1,20 @@
+--Vistas
+-- Crear la vista para la consulta 1
+CREATE VIEW VJugadoresCompra AS
+SELECT j.idJugador, j.nickName, j.correo
+FROM Jugadores j
+JOIN Compras c ON j.idJugador = c.jugador;
+
+-- Crear la vista para la consulta 2
+CREATE VIEW VJugadoresIntercambio AS
+SELECT j.idJugador, j.nickName, j.correo
+FROM Jugadores j
+JOIN Intercambios i ON j.idJugador = i.usuario;
+
+-- Crear la vista para la consulta 3
+-- Nota: Esta vista solo mostrará el precio del producto llamado 'NombreDelProducto'
+CREATE VIEW VPrecioProducto AS
+SELECT Inventarios.nombre, InventarioTienda.precioV
+FROM Inventarios
+JOIN InventarioTienda ON Inventarios.id = InventarioTienda.id
+WHERE Inventarios.nombre = 'NombreDelProducto';
