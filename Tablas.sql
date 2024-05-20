@@ -1,66 +1,83 @@
 --Tablas
 
-CREATE TABLE Inventario(
-    idInventario CHAR(5) NOT NULL,
-    idObjeto CHAR(5) NOT NULL,
+CREATE TABLE Inventarios(
+    id CHAR(5) NOT NULL,
     tipo VARCHAR(8) NOT NULL,
     nombre VARCHAR(50) NOT NULL,
-    color INT NOT NULL
+    color NUMBER (2) NOT NULL
 );
 
 CREATE TABLE InventarioTienda(
-    idObjeto CHAR(5) NOT NULL,
+    id CHAR(5) NOT NULL,
     precioV NUMBER(5,2)NOT NULL,
-    descripcion VARCHAR(100) NOT NULL,
-    precioR NUMBER(5,2) NOT NULL
+    descripcion VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE InventarioUsuario (
-    idObjeto CHAR(5) NOT NULL,
-    fechadecompra DATE NULL, 
+CREATE TABLE DATOS (
+    fechaVenta DATE NOT NULL,
+    valorVenta NUMBER (5,2) NOT NULL,
+    tienda CHAR(5) NOT NULL
+);
+
+CREATE TABLE InventarioUsuarios (
+    fechadecompra DATE NOT NULL, 
     fechadeintercambio DATE NULL,
-    idJugador CHAR(5) NOT NULL
+    Jugador CHAR(5) NOT NULL
 );
 
-CREATE TABLE Linea (
-    idLinea CHAR(5) NOT NULL,
-    precioVenta NUMBER(5,2) NOT NULL
-);
-
-CREATE TABLE Compra (
-    idLinea CHAR(5) NOT NULL,
-    numero CHAR(5) NOT NULL,
-    fecha DATE NOT NULL,
-    total NUMBER(5,2) NOT NULL
-);
-
-CREATE TABLE Jugador (
+CREATE TABLE Jugadores (
     idJugador CHAR(5) NOT NULL,
     nickName VARCHAR(20) NOT NULL,
-    correo VARCHAR(50) NOT NULL
+    correo VARCHAR(50) NOT NULL,
+    intercambio CHAR(5)NOT NULL
 );
 
-CREATE TABLE Moneda (
+CREATE TABLE HISTORIALES (
+    numero CHAR (5) NOT NULL,
+    jugador CHAR (5) NOT NULL,
+    trasnsaccion CHAR (5) NOT NULL
+);
+
+CREATE TABLE ARTICULOS (
+    historial CHAR (5) NOT NULL,
+    objeto CHAR (5)
+);
+
+CREATE TABLE CARRITOS (
+    jugador CHAR (5) NOT NULL,
+    compra CHAR (5) NOT NULL
+);
+
+CREATE TABLE CAMBIOS (
+     jugador CHAR (5) NOT NULL,
+     intercambio CHAR (5) NOT NULL
+);
+
+CREATE TABLE Compras (
+    numero CHAR(5) NOT NULL,
+    fecha DATE NOT NULL,
+    total NUMBER(5,2) NOT NULL,
+    trasnsaccion CHAR (5) NOT NULL
+);
+
+CREATE TABLE Monedas (
     idMoneda CHAR(5) NOT NULL,
-    cantidad NUMBER(5,2) NOT NULL,
-    tipodemoneda CHAR(13) NOT NULL
+    cantidad NUMBER(5,2)NOT NULL,
+    jugador CHAR (5) NOT NULL,
+    intercambio CHAR (5) NOT NULL
 );
 
-CREATE TABLE Intercambio (
+CREATE TABLE Intercambios (
     numero CHAR(5) NOT NULL,
     objeto CHAR(5) NOT NULL,
-    valor NUMBER(5,2) NOT NULL,
-    fecha DATE NOT NULL
+    fecha DATE NOT NULL,
+    usuario CHAR (5) NOT NULL
 );
 
-CREATE TABLE Articulo (
-    idInventario CHAR(5) NOT NULL,
-    idLinea CHAR(5) NOT NULL,
-    precioVenta NUMBER(5,2) NOT NULL
-);
-
-CREATE TABLE Objeto (
-    numero CHAR(5) NOT NULL,
-    idObjeto CHAR(5) NOT NULL,
-    nombre VARCHAR(50) NOT NULL
+CREATE TABLE TRASNSACCIONES (
+    idTrasnccion CHAR (5) NOT NULL,
+    precioVenta NUMBER (5,2) NOT NULL,
+    cantidadArticulos NUMBER (1) NOT NULL,
+    fechaTransaccion DATE NOT NULL,
+    tienda CHAR (5) NOT NULL
 );
