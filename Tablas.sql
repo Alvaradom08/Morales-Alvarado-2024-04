@@ -20,6 +20,7 @@ CREATE TABLE DATOS (
 );
 
 CREATE TABLE InventarioUsuarios (
+    id CHAR (5) NOT NULL,
     fechadecompra DATE NOT NULL, 
     fechadeintercambio DATE NULL,
     Jugador CHAR(5) NOT NULL
@@ -75,7 +76,7 @@ CREATE TABLE Intercambios (
 );
 
 CREATE TABLE TRASNSACCIONES (
-    idTrasnccion CHAR (5) NOT NULL,
+    idTrasnsaccion CHAR (5) NOT NULL,
     precioVenta NUMBER (5,2) NOT NULL,
     cantidadArticulos NUMBER (1) NOT NULL,
     fechaTransaccion DATE NOT NULL,
