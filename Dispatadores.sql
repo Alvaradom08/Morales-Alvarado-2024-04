@@ -16,13 +16,13 @@ DECLARE
     v_nextval NUMBER;
 BEGIN
     -- Determina el prefijo basado en el tipo de objeto
-    IF :NEW.tipo = 'cuchillo' THEN
+    IF :NEW.tipo = 'CUCHILLO' THEN
         v_prefix := 'C';
         SELECT seq_cuchillo.NEXTVAL INTO v_nextval FROM dual;
-    ELSIF :NEW.tipo = 'arma' THEN
+    ELSIF :NEW.tipo = 'ARMA' THEN
         v_prefix := 'A';
         SELECT seq_arma.NEXTVAL INTO v_nextval FROM dual;
-    ELSIF :NEW.tipo = 'skin' THEN
+    ELSIF :NEW.tipo = 'SKIN' THEN
         v_prefix := 'S';
         SELECT seq_skin.NEXTVAL INTO v_nextval FROM dual;
     ELSE
