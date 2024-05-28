@@ -1,5 +1,4 @@
---Tablas
-
+/*TABLAS*/
 CREATE TABLE Inventarios(
     id CHAR(5) NOT NULL,
     tipo VARCHAR(8) NOT NULL,
@@ -36,7 +35,7 @@ CREATE TABLE Jugadores (
 CREATE TABLE HISTORIALES (
     numero CHAR (5) NOT NULL,
     jugador CHAR (5) NOT NULL,
-    trasnsaccion CHAR (5) NOT NULL
+    transaccion CHAR (5) NOT NULL
 );
 
 CREATE TABLE ARTICULOS (
@@ -58,7 +57,7 @@ CREATE TABLE Compras (
     numero CHAR(5) NOT NULL,
     fecha DATE NOT NULL,
     total NUMBER(5,2) NOT NULL,
-    trasnsaccion CHAR (5) NOT NULL
+    transaccion CHAR (5) NOT NULL
 );
 
 CREATE TABLE Monedas (
@@ -75,8 +74,8 @@ CREATE TABLE Intercambios (
     usuario CHAR (5) NOT NULL
 );
 
-CREATE TABLE TRASNSACCIONES (
-    idTrasnsaccion CHAR (5) NOT NULL,
+CREATE TABLE TRANSACCIONES (
+    idTransaccion CHAR (5) NOT NULL,
     precioVenta NUMBER (5,2) NOT NULL,
     cantidadArticulos NUMBER (1) NOT NULL,
     fechaTransaccion DATE NOT NULL,
