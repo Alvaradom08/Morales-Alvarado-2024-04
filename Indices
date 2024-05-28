@@ -1,0 +1,3 @@
+/*INDICES*/
+CREATE INDEX idx_nombre ON Inventarios(nombre);
+CREATE INDEX idx_nickName ON Jugadores(nickName);
