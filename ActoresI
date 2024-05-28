@@ -1,0 +1,174 @@
+/*ActoresI*/
+CREATE OR REPLACE PACKAGE BODY PA_ADMINISTRADOR IS
+    PROCEDURE adicionar(xTipo IN VARCHAR, xNombre IN VARCHAR, xColor IN NUMBER, xPrecioV IN NUMBER, xDescripcion IN VARCHAR)
+    IS
+    BEGIN
+        PC_INVENTARIOS.adicionar(xTipo, xNombre, xColor, xPrecioV, xDescripcion);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE mod_articulo(xPrecioV IN NUMBER, xDescripcion IN VARCHAR)
+    IS
+    BEGIN
+        PC_INVENTARIOS.mod_articulo(xPrecioV, xDescripcion);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE del_transaccion(xIdTransaccion IN CHAR)
+    IS
+    BEGIN
+        PC_COMPRAS.del_transaccion(xIdTransaccion);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_articulo(xNombre IN VARCHAR) RETURN SYS_REFCURSOR IS co_articulo SYS_REFCURSOR;
+    BEGIN
+        co_articulo := PC_INVENTARIOS.co_articulo(xNombre);
+        RETURN PC_INVENTARIOS.co_articulo(xNombre);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_historial(xNumeroH IN CHAR) RETURN SYS_REFCURSOR IS co_historial SYS_REFCURSOR;
+    BEGIN
+        co_historial := PC_COMPRAS.co_historial(xNumeroH);
+        RETURN PC_COMPRAS.co_historial(xNumeroH);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_transaccion(xIdTransaccion IN CHAR) RETURN SYS_REFCURSOR IS co_transaccion SYS_REFCURSOR;
+    BEGIN
+        co_transaccion := PC_COMPRAS.co_transaccion(xIdTransaccion);
+        RETURN PC_COMPRAS.co_transaccion(xIdTransaccion);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_monedas(xIdMoneda IN CHAR) RETURN SYS_REFCURSOR IS co_monedas SYS_REFCURSOR;
+    BEGIN
+        co_monedas := PC_INTERCAMBIOS.co_monedas(xIdMoneda);
+        RETURN PC_INTERCAMBIOS.co_monedas(xIdMoneda);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_jugador(xNickName IN CHAR) RETURN SYS_REFCURSOR IS co_jugador SYS_REFCURSOR;
+    BEGIN
+        co_jugador := PC_INTERCAMBIOS.co_jugador(xNickName);
+        RETURN PC_INTERCAMBIOS.co_jugador(xNickName);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_intercambio(xObjeto IN CHAR) RETURN SYS_REFCURSOR IS co_intercambio SYS_REFCURSOR;
+    BEGIN
+        co_intercambio := PC_INTERCAMBIOS.co_intercambio(xObjeto);
+        RETURN PC_INTERCAMBIOS.co_intercambio(xObjeto);
+    END;
+END;
+------------------------------------------------------------
+CREATE OR REPLACE PACKAGE BODY PA_JUGADOR IS
+    PROCEDURE add_jugador(xNickName IN VARCHAR, xCorreo IN VARCHAR)
+    IS
+    BEGIN
+        PC_INTERCAMBIOS.add_jugador(xNickName, xCorreo);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE add_compra(xFecha IN DATE, xTotal IN NUMBER, xIdTransaccion IN CHAR)
+    IS
+    BEGIN
+        INSERT INTO Compras(fecha, total, transaccion) VALUES (xFecha, xTotal, xIdTransaccion);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE mod_jugador(xNickName IN VARCHAR,xCorreo IN VARCHAR)
+    IS
+    BEGIN
+        PC_INTERCAMBIOS.mod_jugador(xNickName,xCorreo);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE mod_correo(xCorreo IN VARCHAR, xNickName IN VARCHAR)
+    IS
+    BEGIN
+        PC_INTERCAMBIOS.mod_correo(xCorreo, xNickName);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE del_compra(xNumeroC IN CHAR)
+    IS
+    BEGIN
+        PC_COMPRAS.del_compra(xNumeroC);
+    END;
+    ------------------------------------------------------------
+    PROCEDURE del_jugador(xNickName IN CHAR)
+    IS
+    BEGIN
+        PC_INTERCAMBIOS.del_jugador(xNickName);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_articulo(xNombre IN VARCHAR) RETURN SYS_REFCURSOR IS co_articulo SYS_REFCURSOR;
+    BEGIN
+        co_articulo := PC_INVENTARIOS.co_articulo(xNombre);
+        RETURN PC_INVENTARIOS.co_articulo(xNombre);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_compra(xFecha IN DATE) RETURN SYS_REFCURSOR IS co_compra SYS_REFCURSOR;
+    BEGIN
+        co_compra := PC_COMPRAS.co_compra(xFecha);
+        RETURN PC_COMPRAS.co_compra(xFecha);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_jugador(xNickName IN CHAR) RETURN SYS_REFCURSOR IS co_jugador SYS_REFCURSOR;
+    BEGIN
+        co_jugador := PC_INTERCAMBIOS.co_jugador(xNickName);
+        RETURN PC_INTERCAMBIOS.co_jugador(xNickName);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_intercambio(xObjeto IN CHAR) RETURN SYS_REFCURSOR IS co_intercambio SYS_REFCURSOR;
+    BEGIN
+        co_intercambio := PC_INTERCAMBIOS.co_intercambio(xObjeto);
+        RETURN PC_INTERCAMBIOS.co_intercambio(xObjeto);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_correo(xCorreo IN CHAR) RETURN SYS_REFCURSOR IS co_correo SYS_REFCURSOR;
+    BEGIN
+        co_correo := PC_INTERCAMBIOS.co_correo(xCorreo);
+        RETURN PC_INTERCAMBIOS.co_correo(xCorreo);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_monedas(xIdJugador IN CHAR) RETURN SYS_REFCURSOR IS co_monedas SYS_REFCURSOR;
+    BEGIN
+        co_monedas := PC_INTERCAMBIOS.co_monedas(xIdJugador);
+        RETURN PC_INTERCAMBIOS.co_monedas(xIdJugador);
+    END;
+END;
+------------------------------------------------------------
+CREATE OR REPLACE PACKAGE BODY PA_GERENTE IS
+    FUNCTION co_articulo(xNombre IN VARCHAR) RETURN SYS_REFCURSOR IS co_articulo SYS_REFCURSOR;
+    BEGIN
+        co_articulo := PC_INVENTARIOS.co_articulo(xNombre);
+        RETURN PC_INVENTARIOS.co_articulo(xNombre);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_compra(xFecha IN DATE) RETURN SYS_REFCURSOR IS co_compra SYS_REFCURSOR;
+    BEGIN
+        co_compra := PC_COMPRAS.co_compra(xFecha);
+        RETURN PC_COMPRAS.co_compra(xFecha);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_transaccion(xIdTransaccion IN CHAR) RETURN SYS_REFCURSOR IS co_transaccion SYS_REFCURSOR;
+    BEGIN
+        co_transaccion := PC_COMPRAS.co_transaccion(xIdTransaccion);
+        RETURN PC_COMPRAS.co_transaccion(xIdTransaccion);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_historial(xNumeroH IN CHAR) RETURN SYS_REFCURSOR IS co_historial SYS_REFCURSOR;
+    BEGIN
+        co_historial := PC_COMPRAS.co_historial(xNumeroH);
+        RETURN PC_COMPRAS.co_historial(xNumeroH);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_intercambio(xObjeto IN CHAR) RETURN SYS_REFCURSOR IS co_intercambio SYS_REFCURSOR;
+    BEGIN
+        co_intercambio := PC_INTERCAMBIOS.co_intercambio(xObjeto);
+        RETURN PC_INTERCAMBIOS.co_intercambio(xObjeto);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_jugador(xNickName IN CHAR) RETURN SYS_REFCURSOR IS co_jugador SYS_REFCURSOR;
+    BEGIN
+        co_jugador := PC_INTERCAMBIOS.co_jugador(xNickName);
+        RETURN PC_INTERCAMBIOS.co_jugador(xNickName);
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_monedas(xIdMoneda IN CHAR) RETURN SYS_REFCURSOR IS co_monedas SYS_REFCURSOR;
+    BEGIN
+        co_monedas := PC_INTERCAMBIOS.co_monedas(xIdMoneda);
+        RETURN PC_INTERCAMBIOS.co_monedas(xIdMoneda);
+    END;
+END;
