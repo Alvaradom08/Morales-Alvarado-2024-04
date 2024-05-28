@@ -95,3 +95,22 @@ BEGIN
     :NEW.idMoneda := 'V' || v_lastFourDigits;
 END;
 /
+--llena datos cuando compras
+CREATE OR REPLACE TRIGGER trg_fill_datos_compras
+AFTER INSERT ON Compras
+FOR EACH ROW
+BEGIN
+    INSERT INTO DATOS (fechaVenta, valorVenta, tienda)
+    VALUES (SYSDATE, :NEW.total, :NEW.trasnsaccion);
+END;
+--Disparador para llenar las tablas HISTORIALES y ARTICULOS cuando se llena la tabla TRASNSACCIONES
+CREATE OR REPLACE TRIGGER trg_fill_historiales_articulos_transacciones
+AFTER INSERT ON TRASNSACCIONES
+FOR EACH ROW
+BEGIN
+    INSERT INTO HISTORIALES (numero, jugador, trasnsaccion)
+    VALUES (:NEW.idTrasnsaccion, NULL, :NEW.idTrasnsaccion);
+
+    INSERT INTO ARTICULOS (historial, objeto)
+    VALUES (:NEW.idTrasnsaccion, :NEW.tienda);
+END;
