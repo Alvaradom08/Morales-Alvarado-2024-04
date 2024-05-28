@@ -1,0 +1,179 @@
+--CRUDI
+CREATE OR REPLACE PACKAGE BODY PC_INVENTARIOS IS
+    PROCEDURE adicionar(xTipo IN VARCHAR, xNombre IN VARCHAR, xColor IN NUMBER, xPrecioV IN NUMBER, xDescripcion IN VARCHAR)
+    IS
+    BEGIN
+        INSERT INTO Inventarios(tipo, nombre, color) VALUES (xTipo, xNombre, xColor);
+        INSERT INTO InventarioTienda(precioV, descripcion) VALUES (xPrecioV, xDescripcion);
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20000, 'Error al insertar el arti­culo');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE mod_articulo(xNombre IN VARCHAR, xDescripcion IN VARCHAR)
+    IS
+    BEGIN
+        UPDATE InventarioTienda SET descripcion = xDescripcion WHERE (SELECT id FROM Inventarios WHERE nombre = xNombre) = InventarioTienda.id;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20001, 'Error al modificar el arti­culo');
+    END;
+    FUNCTION co_articulo(xNombre IN VARCHAR) RETURN SYS_REFCURSOR IS co_articulo SYS_REFCURSOR;
+    BEGIN
+    OPEN co_articulo FOR
+        SELECT * FROM Inventarios WHERE nombre = xNombre;
+    RETURN co_articulo;
+    END;
+END;
+------------------------------------------------------------
+CREATE OR REPLACE PACKAGE BODY PC_COMPRAS IS
+   PROCEDURE add_compra(xArticulo IN CHAR) IS
+    xValor NUMBER;
+    BEGIN
+        -- Seleccionar el precio del artículo
+        SELECT precioV INTO xValor FROM InventarioTienda WHERE Id = xArticulo;
+        -- Insertar en la tabla TRANSACCIONES
+        INSERT INTO TRANSACCIONES(precioVenta, CantidadArticulos) VALUES (xValor, 1);
+        -- Insertar en la tabla Compras
+        INSERT INTO Compras(total) VALUES (xValor);
+        -- Confirmar los cambios
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- En caso de error, deshacer los cambios y mostrar un mensaje de error
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20000, 'Error al insertar la compra');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE del_compra(xNumeroC IN CHAR)
+    IS
+    BEGIN
+        DELETE FROM Compras WHERE numero = xNumeroC;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20006, 'Error al eliminar la compra');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE del_transaccion(xIdTransaccion IN CHAR)
+    IS
+    BEGIN
+        DELETE FROM TRANSACCIONES WHERE idTransaccion = xIdTransaccion;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20007, 'Error al eliminar la transacciÃ³n');
+    END;
+    FUNCTION co_compra(xFecha IN DATE) RETURN SYS_REFCURSOR IS co_compra SYS_REFCURSOR;
+    BEGIN
+    OPEN co_compra FOR
+        SELECT * FROM Compras WHERE fecha = xFecha;
+    RETURN co_compra;
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_transaccion(xIdTransaccion IN CHAR) RETURN SYS_REFCURSOR IS co_transaccion SYS_REFCURSOR;
+    BEGIN
+    OPEN co_transaccion FOR
+        SELECT * FROM TRANSACCIONES WHERE idTransaccion = xIdTransaccion;
+    RETURN co_transaccion;
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_historial(xNumeroH IN CHAR) RETURN SYS_REFCURSOR IS co_historial SYS_REFCURSOR;
+    BEGIN
+    OPEN co_historial FOR
+        SELECT * FROM HISTORIALES WHERE numero = xNumeroH;
+    RETURN co_historial;
+    END;
+END;
+------------------------------------------------------------
+CREATE OR REPLACE PACKAGE BODY PC_INTERCAMBIOS IS
+    PROCEDURE add_moneda(xCantidad IN NUMBER, xIdJugador IN CHAR)
+    IS
+    BEGIN
+        UPDATE MONEDAS SET cantidad = xCantidad where xIdJugador= jugador;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20001, 'Error al insertar la moneda');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE add_jugador(xNickName IN VARCHAR, xCorreo IN VARCHAR)
+    IS
+    BEGIN
+        INSERT INTO Jugadores(nickName, correo) VALUES (xNickName, xCorreo);
+        INSERT INTO MONEDAS(CANTIDAD,INTERCAMBIO) VALUES(0,NULL);
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20002, 'Error al insertar el jugador');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE mod_correo(xCorreo IN VARCHAR, xNickName IN VARCHAR)
+    IS
+    BEGIN
+        UPDATE Jugadores SET correo = xCorreo WHERE xNickName=NickName;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20003, 'Error al modificar el correo');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE mod_jugador(xNickName IN VARCHAR,xCorreo IN VARCHAR)
+    IS
+    BEGIN
+        UPDATE Jugadores SET nickName = xNickName WHERE xCorreo= CORREO ;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20004, 'Error al modificar el jugador');
+    END;
+    ------------------------------------------------------------
+    PROCEDURE del_jugador(xNickName IN CHAR)
+    IS
+    BEGIN
+        DELETE FROM Jugadores WHERE nickName = xNickName;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20007, 'Error al eliminar el jugador');
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_intercambio(xObjeto IN CHAR) RETURN SYS_REFCURSOR IS co_intercambio SYS_REFCURSOR;
+    BEGIN
+    OPEN co_intercambio FOR
+        SELECT * FROM Intercambios WHERE objeto = xObjeto;
+    RETURN co_intercambio;
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_jugador(xNickName IN CHAR) RETURN SYS_REFCURSOR IS co_jugador SYS_REFCURSOR;
+    BEGIN
+    OPEN co_jugador FOR
+        SELECT * FROM Jugadores WHERE nickName = xNickName;
+    RETURN co_jugador;
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_correo(xCorreo IN CHAR) RETURN SYS_REFCURSOR IS co_correo SYS_REFCURSOR;
+    BEGIN
+    OPEN co_correo FOR
+        SELECT * FROM Jugadores WHERE correo = xCorreo;
+    RETURN co_correo;
+    END;
+    ------------------------------------------------------------
+    FUNCTION co_monedas(xIdJugador IN CHAR) RETURN SYS_REFCURSOR IS co_monedas SYS_REFCURSOR;
+    BEGIN
+    OPEN co_monedas FOR
+        SELECT * FROM MONEDAS WHERE jugador = xIdJugador;
+    RETURN co_monedas;
+    END;
+END;
