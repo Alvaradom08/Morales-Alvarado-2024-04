@@ -1,0 +1,6 @@
+/*XIndicesVistas*/
+DROP INDEX idx_nickName;
+DROP INDEX idx_nombre;
+DROP VIEW VJugadoresCompra;
+DROP VIEW VJugadoresIntercambio;
+DROP VIEW VPrecioProducto;
