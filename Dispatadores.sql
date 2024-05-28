@@ -1,10 +1,11 @@
---disparadores
+/*DISPARADORES*/
 CREATE SEQUENCE seq_cuchillo START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_arma START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_skin START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_cp START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_tr START WITH 1 INCREMENT BY 1 NOCACHE;
 CREATE SEQUENCE seq_in START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE SEQUENCE seq_jugador START WITH 1 INCREMENT BY 1 NOCACHE;
 ------------------------------------------------------------
 -- TRIGGER PARA GENERAR ID DE INVENTARIOS
 CREATE OR REPLACE TRIGGER trg_autogenerar_idInventarios
@@ -26,10 +27,10 @@ BEGIN
         v_prefix := 'S';
         SELECT seq_skin.NEXTVAL INTO v_nextval FROM dual;
     ELSE
-        RAISE_APPLICATION_ERROR(-20001, 'Tipo de objeto no válido');
+        RAISE_APPLICATION_ERROR(-20001, 'Tipo de objeto no vï¿½lido');
     END IF;
 
-    -- Formatea el valor numérico de la secuencia
+    -- Formatea el valor numï¿½rico de la secuencia
     v_sequence := TO_CHAR(v_nextval, 'FM0000');
 
     -- Asigna el valor generado a la columna id
@@ -48,10 +49,10 @@ END;
 
 -- TRIGGER PARA GENERAR ID DE TRANSACCIONES
 CREATE OR REPLACE TRIGGER trg_autogenerar_idTransacciones
-BEFORE INSERT ON TRASNSACCIONES
+BEFORE INSERT ON TRANSACCIONES
 FOR EACH ROW
 BEGIN
-    :NEW.idTrasnsaccion := 'TR' || LPAD(seq_tr.NEXTVAL, 3, '0');
+    :NEW.idTransaccion := 'TR' || LPAD(seq_tr.NEXTVAL, 3, '0');
 END;
 /
 
@@ -88,7 +89,7 @@ FOR EACH ROW
 DECLARE
     v_lastFourDigits VARCHAR2(4);
 BEGIN
-    -- Extraer los últimos cuatro dígitos del idJugador
+    -- Extraer los ï¿½ltimos cuatro dï¿½gitos del idJugador
     v_lastFourDigits := SUBSTR(:NEW.jugador, -4);
 
     -- Asignar el valor generado a la columna idMoneda
@@ -101,16 +102,16 @@ AFTER INSERT ON Compras
 FOR EACH ROW
 BEGIN
     INSERT INTO DATOS (fechaVenta, valorVenta, tienda)
-    VALUES (SYSDATE, :NEW.total, :NEW.trasnsaccion);
+    VALUES (SYSDATE, :NEW.total, :NEW.transaccion);
 END;
 --Disparador para llenar las tablas HISTORIALES y ARTICULOS cuando se llena la tabla TRASNSACCIONES
 CREATE OR REPLACE TRIGGER trg_fill_historiales_articulos_transacciones
-AFTER INSERT ON TRASNSACCIONES
+AFTER INSERT ON TRANSACCIONES
 FOR EACH ROW
 BEGIN
-    INSERT INTO HISTORIALES (numero, jugador, trasnsaccion)
-    VALUES (:NEW.idTrasnsaccion, NULL, :NEW.idTrasnsaccion);
-
+    INSERT INTO HISTORIALES (numero, jugador, transaccion)
+    VALUES (:NEW.idTransaccion, NULL, :NEW.idTransaccion);
+ 
     INSERT INTO ARTICULOS (historial, objeto)
-    VALUES (:NEW.idTrasnsaccion, :NEW.tienda);
+    VALUES (:NEW.idTransaccion, :NEW.tienda);
 END;
